@@ -12,6 +12,7 @@ struct ContentView: View {
     @State var inputUnit: String = "Celsius"
     @State var outputUnit: String = "Fahrenheit"
     @State var selectedConversionType: String = "Temperature"
+    @FocusState private var keyboardActive: Bool
     
     let allUnits = [
         "Temperature": [
@@ -141,6 +142,7 @@ struct ContentView: View {
                         TextField("Enter input value", value: $inputValue, format: .number)
                             .keyboardType(.decimalPad)
                             .padding(10)
+                            .focused($keyboardActive)
                         Picker("Select your input value's unit", selection: $inputUnit) {
                             ForEach(availableUnits, id: \.self) {
                                 Text($0)
@@ -163,10 +165,23 @@ struct ContentView: View {
                             }
                             .pickerStyle(.menu)
                         }
+                    } header: {
+                        Text("Output Value and Unit")
                     }
                 }
             }
             .navigationTitle("I Don't Like Units")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button {
+                        keyboardActive = false
+                    } label: {
+                        Text("Done")
+                    }
+
+                }
+            }
         }
     }
 }
